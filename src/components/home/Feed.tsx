@@ -10,13 +10,13 @@ interface Post {
   content: string;
   author: {
     _id: string;
-    email: string;
+    username: string;
   };
 }
 
 interface Author {
   _id: string;
-  email: string;
+  username: string;
 }
 
 export default function BloggrFeedPage({ initialPosts }: { initialPosts: Post[] }) {
@@ -25,10 +25,17 @@ export default function BloggrFeedPage({ initialPosts }: { initialPosts: Post[] 
   const [posts, setPosts] = useState<Post[]>(initialPosts);
   const [selectedAuthor, setSelectedAuthor] = useState<string | null>(null);
   const [authors, setAuthors] = useState<Author[]>([]);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
     const uniqueAuthors = Array.from(new Map(initialPosts.map(p => [p.author._id, p.author])).values());
     setAuthors(uniqueAuthors);
+
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, [initialPosts]);
 
   const filteredBySearch = posts.filter(
@@ -64,16 +71,9 @@ export default function BloggrFeedPage({ initialPosts }: { initialPosts: Post[] 
         }
       `}</style>
       
-      {/* Main Content */}
-      <div className="max-w-3xl mx-auto px-4 py-12">
-        {/* Header */}
-        <header className="mb-12 text-center">
-          <h1 className="text-4xl font-bold mb-2">Bloggr</h1>
-          <p className="text-slate-400">Thoughts, stories and ideas</p>
-        </header>
-
-        {/* Search and Filters */}
-        <div className="mb-8 space-y-4">
+      {/* Sticky Search Bar */}
+      <div className={`sticky top-0 z-10 bg-slate-900/95 backdrop-blur-sm border-b border-slate-800 transition-all duration-300 ${isScrolled ? 'pt-16 pb-4' : 'py-4'}`}>
+        <div className="max-w-3xl mx-auto px-4">
           <div className="relative">
             <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
             <input
@@ -84,7 +84,21 @@ export default function BloggrFeedPage({ initialPosts }: { initialPosts: Post[] 
               className="w-full bg-slate-800 text-white pl-12 pr-4 py-3 rounded-lg border border-slate-700 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500/30 transition-colors duration-200"
             />
           </div>
+        </div>
+      </div>
 
+      {/* Main Content */}
+      <div className="max-w-3xl mx-auto px-4 py-12">
+        {/* Header - Only visible when not scrolled */}
+        {!isScrolled && (
+          <header className="mb-12 text-center">
+            <h1 className="text-4xl font-bold mb-2">Bloggr</h1>
+            <p className="text-slate-400">Thoughts, stories and ideas</p>
+          </header>
+        )}
+
+        {/* Filters - Below search when scrolled */}
+        <div className={`mb-8 ${isScrolled ? 'pt-4' : ''}`}>
           <div className="flex flex-wrap gap-2">
             <button
               onClick={() => setSelectedAuthor(null)}
@@ -102,7 +116,7 @@ export default function BloggrFeedPage({ initialPosts }: { initialPosts: Post[] 
                   selectedAuthor === author._id ? 'bg-blue-500 text-white' : 'bg-slate-800 hover:bg-slate-700 text-slate-300'
                 }`}
               >
-                {author.email}
+                {author.username}
               </button>
             ))}
           </div>
@@ -121,7 +135,7 @@ export default function BloggrFeedPage({ initialPosts }: { initialPosts: Post[] 
               return (
                 <article key={post._id} className="border-b border-slate-700 pb-8">
                   <div className="mb-2 text-sm text-blue-400">
-                    {post.author?.email || "Unknown Author"}
+                    {post.author?.username || "Unknown Author"}
                   </div>
                   <Link href={postUrl}>
                     <h2 className="text-2xl font-bold text-white mb-3 hover:text-blue-400 transition-colors duration-200">

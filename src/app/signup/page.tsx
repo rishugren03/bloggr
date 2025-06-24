@@ -28,19 +28,22 @@ export default function SignUpPage() {
     setSuccess("");
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:5000/api/auth/signup", {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+      const res = await fetch(`${apiUrl}/api/auth/signup`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
+
+      const data = await res.json();
       if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.msg || data.errors?.[0]?.msg || "Signup failed");
+        throw new Error(data.errors?.[0]?.msg || "Signup failed");
       }
-      setSuccess("Signup successful! Redirecting to login...");
-      setTimeout(() => {
-        router.push("/login");
-      }, 1500);
+      
+      login(data.token);
+      setSuccess("Signup successful! Redirecting...");
+      router.push("/");
+
     } catch (err: any) {
       setError(err.message);
     } finally {

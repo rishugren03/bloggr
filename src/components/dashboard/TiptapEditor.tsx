@@ -51,8 +51,17 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({ content, onChange }) => {
     formData.append('image', file)
 
     try {
-      const res = await fetch('http://localhost:5000/api/upload', {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('Authentication token not found.');
+      }
+
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+      const res = await fetch(`${apiUrl}/api/upload`, {
         method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
         body: formData,
       })
 
