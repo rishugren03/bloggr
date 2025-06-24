@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import TiptapEditor from "./TiptapEditor";
 
 export default function CreatePostForm() {
   const [title, setTitle] = useState("");
@@ -9,6 +10,10 @@ export default function CreatePostForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
+
+  // const handleContentChange = (newContent: string) => {
+  //   setContent(newContent);
+  // };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,7 +26,7 @@ export default function CreatePostForm() {
       return;
     }
     try {
-      const res = await fetch("http://localhost:3001/api/posts/create", {
+      const res = await fetch("http://localhost:5000/api/posts/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -42,7 +47,7 @@ export default function CreatePostForm() {
   };
 
   return (
-    <div className="max-w-xl mb-12">
+    <div className="max-w-3xl w-full mb-12">
       <h2 className="text-2xl font-bold text-white mb-4">Create a New Post</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         <input
@@ -53,13 +58,7 @@ export default function CreatePostForm() {
           onChange={(e) => setTitle(e.target.value)}
           disabled={loading}
         />
-        <textarea
-          placeholder="Content"
-          className="w-full px-4 py-2 bg-[#1e293b] border border-[#334155] text-white rounded-md h-32 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          disabled={loading}
-        />
+        <TiptapEditor content={content} onChange={setContent}/>
         <button
           type="submit"
           className="bg-[#3b82f6] text-white font-semibold px-5 py-2 rounded-md hover:bg-[#2563eb] transition"

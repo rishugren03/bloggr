@@ -18,7 +18,7 @@ export default function PostDetailPage() {
       setLoading(false);
       return;
     }
-    fetch(`http://localhost:3001/api/posts/getbyid/${id}`)
+    fetch(`http://localhost:5000/api/posts/getbyid/${id}`)
       .then((res) => {
         if (!res.ok) {
             if (res.status === 400) throw new Error("Invalid Post ID format");
@@ -50,7 +50,10 @@ export default function PostDetailPage() {
         <div className="mb-6 text-gray-400 text-sm">
           By {post.author?.email || "Unknown Author"} &middot; {new Date(post.createdAt).toLocaleString()}
         </div>
-        <div className="text-lg text-gray-200 whitespace-pre-line">{post.content}</div>
+        <div 
+          className="prose prose-invert max-w-none"
+          dangerouslySetInnerHTML={{ __html: post.content }} 
+        />
       </div>
     </div>
   );

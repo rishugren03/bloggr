@@ -33,7 +33,7 @@ export default function PostList() {
       return;
     }
     setLoading(true);
-    fetch(`http://localhost:3001/api/posts/get?author=${userId}`)
+    fetch(`http://localhost:5000/api/posts/get?author=${userId}`)
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch posts");
         return res.json();
@@ -80,7 +80,10 @@ export default function PostList() {
                 <h4 className="text-xl font-bold text-white mb-2">
                   {post.title}
                 </h4>
-                <p className="text-gray-300">{post.content}</p>
+                <div
+                  className="text-gray-300 post-content-preview"
+                  dangerouslySetInnerHTML={{ __html: post.content }}
+                />
                 <span className="text-xs text-gray-400 mt-2">{new Date(post.createdAt).toLocaleString()}</span>
               </div>
             </div>

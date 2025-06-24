@@ -4,39 +4,46 @@ import React, { useState, useEffect } from "react";
 import { Search, ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
 
-export default function BloggrFeedPage() {
+interface Post {
+  _id: string;
+  title: string;
+  content: string;
+  author: {
+    _id: string;
+    email: string;
+  };
+}
+
+interface Author {
+  _id: string;
+  email: string;
+}
+
+export default function BloggrFeedPage({ initialPosts }: { initialPosts: Post[] }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [posts, setPosts] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [posts, setPosts] = useState<Post[]>(initialPosts);
+  const [selectedAuthor, setSelectedAuthor] = useState<string | null>(null);
+  const [authors, setAuthors] = useState<Author[]>([]);
 
   useEffect(() => {
-    setLoading(true);
-    fetch("http://localhost:3001/api/posts/get")
-      .then((res) => {
-        if (!res.ok) throw new Error("Failed to fetch posts");
-        return res.json();
-      })
-      .then((data) => {
-        setPosts(data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        setError(err.message);
-        setLoading(false);
-      });
-  }, []);
+    const uniqueAuthors = Array.from(new Map(initialPosts.map(p => [p.author._id, p.author])).values());
+    setAuthors(uniqueAuthors);
+  }, [initialPosts]);
 
-  const filteredPosts = posts.filter(
+  const filteredBySearch = posts.filter(
     (post) =>
       post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       post.content.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const filteredByAuthor = selectedAuthor
+    ? filteredBySearch.filter(post => post.author._id === selectedAuthor)
+    : filteredBySearch;
+
   const postsPerPage = 5;
-  const totalPages = Math.ceil(filteredPosts.length / postsPerPage);
-  const paginatedPosts = filteredPosts.slice(
+  const totalPages = Math.ceil(filteredByAuthor.length / postsPerPage);
+  const paginatedPosts = filteredByAuthor.slice(
     (currentPage - 1) * postsPerPage,
     currentPage * postsPerPage
   );
@@ -51,122 +58,123 @@ export default function BloggrFeedPage() {
 
   return (
     <div className="min-h-screen bg-slate-900 text-white">
+      <style jsx global>{`
+        html {
+          scroll-behavior: smooth;
+        }
+      `}</style>
+      
       {/* Main Content */}
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Search Bar */}
-        <div className="mb-8">
-          <div className="relative max-w-2xl">
+      <div className="max-w-3xl mx-auto px-4 py-12">
+        {/* Header */}
+        <header className="mb-12 text-center">
+          <h1 className="text-4xl font-bold mb-2">Bloggr</h1>
+          <p className="text-slate-400">Thoughts, stories and ideas</p>
+        </header>
+
+        {/* Search and Filters */}
+        <div className="mb-8 space-y-4">
+          <div className="relative">
             <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
             <input
               type="text"
-              placeholder="Search posts"
+              placeholder="Search posts..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full bg-slate-700 text-white pl-12 pr-4 py-3 rounded-lg border border-slate-600 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-colors duration-200"
+              className="w-full bg-slate-800 text-white pl-12 pr-4 py-3 rounded-lg border border-slate-700 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500/30 transition-colors duration-200"
             />
+          </div>
+
+          <div className="flex flex-wrap gap-2">
+            <button
+              onClick={() => setSelectedAuthor(null)}
+              className={`px-3 py-1 text-sm rounded-md transition-colors duration-200 ${
+                !selectedAuthor ? 'bg-blue-500 text-white' : 'bg-slate-800 hover:bg-slate-700 text-slate-300'
+              }`}
+            >
+              All Authors
+            </button>
+            {authors.map(author => (
+              <button
+                key={author._id}
+                onClick={() => setSelectedAuthor(author._id)}
+                className={`px-3 py-1 text-sm rounded-md transition-colors duration-200 ${
+                  selectedAuthor === author._id ? 'bg-blue-500 text-white' : 'bg-slate-800 hover:bg-slate-700 text-slate-300'
+                }`}
+              >
+                {author.email}
+              </button>
+            ))}
           </div>
         </div>
 
-        {/* Filter Buttons */}
-        <div className="flex flex-wrap gap-4 mb-8">
-          <button className="flex items-center space-x-2 bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-lg border border-slate-600 transition-colors duration-200">
-            <span>All Authors</span>
-            <ChevronDown className="w-4 h-4" />
-          </button>
-          <button className="flex items-center space-x-2 bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-lg border border-slate-600 transition-colors duration-200">
-            <span>Author 1</span>
-            <ChevronDown className="w-4 h-4" />
-          </button>
-          <button className="flex items-center space-x-2 bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-lg border border-slate-600 transition-colors duration-200">
-            <span>Author 2</span>
-            <ChevronDown className="w-4 h-4" />
-          </button>
-        </div>
-
-        {/* Blog Posts Grid */}
+        {/* Blog Posts List */}
         <div className="space-y-8">
-          {loading ? (
-            Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className="bg-slate-800 rounded-xl p-8 animate-pulse">
-                <div className="h-6 bg-slate-700 rounded w-1/3 mb-4" />
-                <div className="h-4 bg-slate-700 rounded w-2/3 mb-2" />
-                <div className="h-4 bg-slate-700 rounded w-1/2" />
-              </div>
-            ))
-          ) : error ? (
-            <div className="text-red-400">{error}</div>
+          {posts.length === 0 ? (
+            <div className="text-center text-gray-400 py-12">No posts found.</div>
           ) : paginatedPosts.length === 0 ? (
-            <div className="text-gray-400">No posts found.</div>
+            <div className="text-center text-gray-400 py-12">No posts match your search criteria.</div>
           ) : (
             paginatedPosts.map((post) => {
               const slug = slugify(post.title);
               const postUrl = `/post/${slug}/${post._id}`;
               return (
-                <Link href={postUrl} key={post._id} legacyBehavior>
-                  <a>
-                    <article
-                      className="bg-slate-800 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 hover:transform hover:scale-[1.02] group cursor-pointer"
-                    >
-                      <div className="flex flex-col lg:flex-row">
-                        <div className="flex-1 p-8">
-                          <div className="mb-3">
-                            <span className="inline-block bg-blue-500/20 text-blue-300 px-3 py-1 rounded-full text-sm font-medium">
-                              {post.author?.email || "Unknown Author"}
-                            </span>
-                          </div>
-                          <h2 className="text-2xl font-bold text-white mb-4 group-hover:text-blue-300 transition-colors duration-200">
-                            {post.title}
-                          </h2>
-                          <p className="text-gray-300 text-lg leading-relaxed mb-6">
-                            {post.content}
-                          </p>
-                        </div>
-                      </div>
-                    </article>
-                  </a>
-                </Link>
+                <article key={post._id} className="border-b border-slate-700 pb-8">
+                  <div className="mb-2 text-sm text-blue-400">
+                    {post.author?.email || "Unknown Author"}
+                  </div>
+                  <Link href={postUrl}>
+                    <h2 className="text-2xl font-bold text-white mb-3 hover:text-blue-400 transition-colors duration-200">
+                      {post.title}
+                    </h2>
+                  </Link>
+                  <div 
+                    className="text-slate-300 mb-4 line-clamp-3 prose prose-invert"
+                    dangerouslySetInnerHTML={{ __html: post.content }}
+                  />
+                  <Link href={postUrl}>
+                    <span className="text-blue-400 hover:underline cursor-pointer">Read more →</span>
+                  </Link>
+                </article>
               );
             })
           )}
         </div>
 
         {/* Pagination */}
-        <div className="flex items-center justify-center space-x-2 mt-12">
-          <button
-            onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
-            disabled={currentPage === 1}
-            className="p-2 rounded-lg bg-slate-700 hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
-          >
-            <ChevronLeft className="w-5 h-5" />
-          </button>
+        {totalPages > 1 && (
+          <div className="flex items-center justify-center space-x-2 mt-12">
+            <button
+              onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+              disabled={currentPage === 1}
+              className="p-2 rounded-md bg-slate-800 hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </button>
 
-          {Array.from({ length: totalPages }).map((_, page) =>
-            page < 3 || page === totalPages - 1 || Math.abs(page + 1 - currentPage) <= 1 ? (
+            {Array.from({ length: totalPages }).map((_, page) => (
               <button
                 key={page}
                 onClick={() => setCurrentPage(page + 1)}
-                className={`px-4 py-2 rounded-lg font-medium transition-colors duration-200 ${
+                className={`w-10 h-10 rounded-md font-medium transition-colors duration-200 ${
                   currentPage === page + 1
                     ? "bg-blue-500 text-white"
-                    : "bg-slate-700 hover:bg-slate-600 text-gray-300"
+                    : "bg-slate-800 hover:bg-slate-700 text-slate-300"
                 }`}
               >
                 {page + 1}
               </button>
-            ) :
-              page === 3 && currentPage > 5 ? (
-                <span key="ellipsis" className="px-2 text-gray-400">...</span>
-              ) : null
-          )}
+            ))}
 
-          <button
-            onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
-            disabled={currentPage === totalPages}
-            className="p-2 rounded-lg bg-slate-700 hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
-          >
-            <ChevronRight className="w-5 h-5" />
-          </button>
-        </div>
+            <button
+              onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+              disabled={currentPage === totalPages}
+              className="p-2 rounded-md bg-slate-800 hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
+            >
+              <ChevronRight className="w-5 h-5" />
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
