@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import PostList from "@/components/dashboard/PostList";
 import { useAuth } from "@/context/AuthContext";
+import { PenSquare } from "lucide-react";
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -18,15 +19,25 @@ export default function DashboardPage() {
   if (!isAuthenticated) return null;
 
   return (
-    <div className="min-h-screen bg-[#0f172a] text-white py-16 px-6 flex flex-col items-center">
-      <button
-        onClick={() => router.push("/create-post")}
-        className="mb-12 px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white text-2xl font-bold rounded-full shadow-lg animate-bounce hover:scale-105 hover:from-purple-600 hover:to-blue-500 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-blue-400/50"
-        style={{ minWidth: 240 }}
-      >
-        + Create a Post
-      </button>
-      <PostList />
+    <div className="min-h-screen bg-[#0f172a] text-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {/* Header with create post button */}
+        <div className="flex flex-col items-center mb-12">
+          <h1 className="text-3xl font-bold text-center mb-6">
+            Your <span className="text-blue-400">Dashboard</span>
+          </h1>
+          <button
+            onClick={() => router.push("/create-post")}
+            className="flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-all duration-200 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-slate-900"
+          >
+            <PenSquare className="w-5 h-5" />
+            Create New Post
+          </button>
+        </div>
+
+        {/* Post list */}
+        <PostList />
+      </div>
     </div>
   );
 }

@@ -36,7 +36,7 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({ content, onChange }) => {
     },
     editorProps: {
       attributes: {
-        class: 'prose prose-invert max-w-none p-4 min-h-[200px] bg-[#1e293b] rounded-b-md focus:outline-none',
+        class: 'prose prose-invert max-w-none p-4 min-h-[400px] bg-[#1e293b] rounded-b-md focus:outline-none',
       },
     },
   })

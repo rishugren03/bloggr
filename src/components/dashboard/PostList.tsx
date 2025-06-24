@@ -1,7 +1,9 @@
 "use client";
 
-import Image from "next/image";
 import { useState, useEffect } from "react";
+import PostCard from "@/components/shared/PostCard";
+import Pagination from "@/components/shared/Pagination";
+import { useSearchParams } from "next/navigation";
 
 function parseJwt(token: string) {
   try {
@@ -15,8 +17,9 @@ export default function PostList() {
   const [posts, setPosts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
+  const params = useSearchParams();
   const postsPerPage = 3;
+  const currentPage = parseInt(params.get("page") || "1", 10);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -33,7 +36,7 @@ export default function PostList() {
       return;
     }
     setLoading(true);
-    fetch(`http://localhost:5000/api/posts/get?author=${userId}`)
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/posts/get?author=${userId}`)
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch posts");
         return res.json();
@@ -72,36 +75,12 @@ export default function PostList() {
         ) : currentPosts.length === 0 ? (
           <div className="text-gray-400">No posts found.</div>
         ) : (
-          currentPosts.map((post, index) => (
-            <div
-              key={post._id}
-              className="flex flex-col md:flex-row gap-6 bg-gradient-to-r from-gray-800 to-gray-900 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
-              <div className="flex-1 p-6 flex flex-col justify-center">
-                <h4 className="text-xl font-bold text-white mb-2">
-                  {post.title}
-                </h4>
-                <div
-                  className="text-gray-300 post-content-preview"
-                  dangerouslySetInnerHTML={{ __html: post.content }}
-                />
-                <span className="text-xs text-gray-400 mt-2">{new Date(post.createdAt).toLocaleString()}</span>
-              </div>
-            </div>
+          currentPosts.map((post) => (
+            <PostCard key={post._id} {...post} showReadMore />
           ))
         )}
       </div>
-      <div className="flex justify-center mt-10 gap-2">
-        {Array.from({ length: totalPages }).map((_, i) => (
-          <button
-            key={i}
-            onClick={() => setCurrentPage(i + 1)}
-            className={`w-10 h-10 rounded-md text-white flex items-center justify-center ${
-              currentPage === i + 1 ? "bg-blue-600" : "bg-gray-700"
-            } hover:bg-blue-600 transition-all duration-200`}>
-            {i + 1}
-          </button>
-        ))}
-      </div>
+      <Pagination totalPages={totalPages} currentPage={currentPage} />
     </div>
   );
 }

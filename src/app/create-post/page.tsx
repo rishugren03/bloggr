@@ -18,7 +18,7 @@ export default function CreatePostPage() {
   if (!isAuthenticated) return null;
 
   return (
-    <div className="min-h-screen bg-[#0f172a] flex items-center justify-center">
+    <div className="min-h-screen bg-[#0f172a] p-4 sm:p-6 lg:p-8 flex items-center justify-center">
       <CreatePostForm />
     </div>
   );
