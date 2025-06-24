@@ -3,29 +3,27 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 
-function extractId(slugid: string) {
-  // Assumes format: slug-12345
-  const match = slugid.match(/-(\w{5})$/);
-  return match ? match[1] : null;
-}
-
 export default function PostDetailPage() {
   const params = useParams();
-  const { slugid } = params as { slugid: string };
+  const slugParams = params.slugid as string[];
+  const id = slugParams?.[slugParams.length - 1];
+
   const [post, setPost] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    const id = extractId(slugid);
     if (!id) {
-      setError("Invalid post URL");
+      setError("Post ID not found in URL");
       setLoading(false);
       return;
     }
     fetch(`http://localhost:3001/api/posts/getbyid/${id}`)
       .then((res) => {
-        if (!res.ok) throw new Error("Post not found");
+        if (!res.ok) {
+            if (res.status === 400) throw new Error("Invalid Post ID format");
+            throw new Error("Post not found");
+        };
         return res.json();
       })
       .then((data) => {
@@ -36,7 +34,7 @@ export default function PostDetailPage() {
         setError(err.message);
         setLoading(false);
       });
-  }, [slugid]);
+  }, [id]);
 
   if (loading) {
     return <div className="min-h-screen flex items-center justify-center text-white">Loading...</div>;

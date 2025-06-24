@@ -100,8 +100,7 @@ export default function BloggrFeedPage() {
           ) : (
             paginatedPosts.map((post) => {
               const slug = slugify(post.title);
-              const idPart = post._id?.slice(-5) || Math.floor(Math.random() * 100000).toString().padStart(5, "0");
-              const postUrl = `/post/${slug}-${idPart}`;
+              const postUrl = `/post/${slug}/${post._id}`;
               return (
                 <Link href={postUrl} key={post._id} legacyBehavior>
                   <a>

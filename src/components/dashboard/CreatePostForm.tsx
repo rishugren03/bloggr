@@ -1,18 +1,18 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function CreatePostForm() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    setSuccess("");
     setLoading(true);
     const token = localStorage.getItem("token");
     if (!token) {
@@ -33,9 +33,7 @@ export default function CreatePostForm() {
         const data = await res.json();
         throw new Error(data.msg || data.errors?.[0]?.msg || "Failed to create post");
       }
-      setTitle("");
-      setContent("");
-      setSuccess("Post created successfully!");
+      router.push('/dashboard');
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -70,7 +68,6 @@ export default function CreatePostForm() {
           {loading ? "Publishing..." : "Publish"}
         </button>
         {error && <div className="text-red-400 text-sm mt-2">{error}</div>}
-        {success && <div className="text-green-400 text-sm mt-2">{success}</div>}
       </form>
     </div>
   );
