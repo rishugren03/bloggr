@@ -1,24 +1,62 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Bloggr - Frontend
+
+This is the frontend for the Bloggr platform, a personal blog where users can sign up, log in, and share their posts. It is a modern, server-rendered application built with Next.js 14 and TypeScript, and styled with Tailwind CSS.
+
+## Features
+
+-   **Server-Side Rendering (SSR):** The homepage is server-rendered for fast initial load times and SEO benefits.
+-   **Static Site Generation (SSG):** Individual blog posts are pre-rendered as static pages for maximum performance.
+-   **Rich Text Editor:** A beautiful Tiptap-based editor for creating and editing posts.
+-   **Image Uploads:** Seamlessly upload images directly from the editor.
+-   **Authentication:** Client-side auth handling with protected routes and context management.
+-   **Responsive Design:** Clean, modern, and responsive UI that works on all devices.
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+-   Node.js (v18 or newer)
+-   A running instance of the [Bloggr Backend](<link-to-your-backend-repo>).
+
+### 1. Clone the Repository
+
+```bash
+git clone <your-repo-url>
+cd <your-repo-folder>/bloggr
+```
+
+### 2. Install Dependencies
+
+```bash
+npm install
+```
+
+### 3. Set Up Environment Variables
+
+Create a `.env.local` file in the `bloggr` root directory and add the following variable. It should point to the URL where your backend is running.
+
+```env
+# The URL of your running backend server
+NEXT_PUBLIC_API_URL=http://localhost:5000
+```
+
+### 4. Run the Development Server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The app will be available at `http://localhost:3000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+-   `src/app/`: Contains all the pages and routes for the application, following the App Router convention.
+-   `src/components/`: Reusable React components used across different pages.
+    -   `dashboard/`: Components specific to the user dashboard.
+    -   `home/`: Components for the main homepage/feed.
+    -   `shared/`: Components used everywhere, like the Navbar and Footer.
+-   `src/context/`: Holds the `AuthContext` for managing user authentication state.
+-   `public/`: Static assets like images and SVGs.
 
 ## Learn More
 
