@@ -1,28 +1,37 @@
-# Bloggr - Frontend
+# Bloggr Frontend
 
-This is the frontend for the Bloggr platform, a personal blog where users can sign up, log in, and share their posts. It is a modern, server-rendered application built with Next.js 14 and TypeScript, and styled with Tailwind CSS.
+This is the frontend for the **Bloggr** platform, a modern, server-rendered application built with Next.js 14, React, and TypeScript. It is styled with Tailwind CSS for a clean and responsive design.
 
-## Features
+## ✨ Features
 
--   **Server-Side Rendering (SSR):** The homepage is server-rendered for fast initial load times and SEO benefits.
--   **Static Site Generation (SSG):** Individual blog posts are pre-rendered as static pages for maximum performance.
--   **Rich Text Editor:** A beautiful Tiptap-based editor for creating and editing posts.
--   **Image Uploads:** Seamlessly upload images directly from the editor.
--   **Authentication:** Client-side auth handling with protected routes and context management.
--   **Responsive Design:** Clean, modern, and responsive UI that works on all devices.
+-   **Optimized Rendering:** Uses Server-Side Rendering (SSR) for the main feed for SEO and fast loads, and Static Site Generation (SSG) for individual posts for peak performance.
+-   **Rich Text Editor:** A powerful and intuitive [Tiptap](https://tiptap.dev/) editor for creating and editing posts.
+-   **Seamless Image Uploads:** Upload images directly from the editor to the backend.
+-   **Client-Side Authentication:** Robust authentication flow using React Context to manage user state and protect routes.
+-   **Responsive Design:** A fully responsive and modern UI that looks great on all devices, from mobile to desktop.
+-   **Component-Based Architecture:** A clean, organized structure with reusable components.
 
-## Getting Started
+## 🛠️ Tech Stack
+
+-   **Framework:** [Next.js](https://nextjs.org/) 14 (App Router)
+-   **Language:** [TypeScript](https://www.typescriptlang.org/)
+-   **Styling:** [Tailwind CSS](https://tailwindcss.com/)
+-   **State Management:** [React Context](https://react.dev/learn/passing-data-deeply-with-context)
+-   **Rich Text Editor:** [Tiptap](https://tiptap.dev/)
+-   **Icons:** [Lucide React](https://lucide.dev/)
+
+## 🚀 Getting Started
 
 ### Prerequisites
 
--   Node.js (v18 or newer)
--   A running instance of the [Bloggr Backend](<link-to-your-backend-repo>).
+-   [Node.js](https://nodejs.org/) (v18 or newer recommended)
+-   A running instance of the [Bloggr Backend](https://github.com/your-username/your-repo-name/tree/main/bloggr-backend).
 
 ### 1. Clone the Repository
 
 ```bash
-git clone <your-repo-url>
-cd <your-repo-folder>/bloggr
+git clone https://github.com/your-username/your-repo-name.git
+cd your-repo-name/bloggr
 ```
 
 ### 2. Install Dependencies
@@ -33,10 +42,14 @@ npm install
 
 ### 3. Set Up Environment Variables
 
-Create a `.env.local` file in the `bloggr` root directory and add the following variable. It should point to the URL where your backend is running.
+Create a `.env.local` file in the `bloggr` root directory by copying the example:
+```bash
+cp .env.local.example .env.local
+```
+Then, update the file with the URL of your running backend server.
 
 ```env
-# The URL of your running backend server
+# The public URL of your running backend API
 NEXT_PUBLIC_API_URL=http://localhost:5000
 ```
 
@@ -46,29 +59,37 @@ NEXT_PUBLIC_API_URL=http://localhost:5000
 npm run dev
 ```
 
-The app will be available at `http://localhost:3000`.
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 ## Project Structure
 
--   `src/app/`: Contains all the pages and routes for the application, following the App Router convention.
--   `src/components/`: Reusable React components used across different pages.
-    -   `dashboard/`: Components specific to the user dashboard.
-    -   `home/`: Components for the main homepage/feed.
-    -   `shared/`: Components used everywhere, like the Navbar and Footer.
--   `src/context/`: Holds the `AuthContext` for managing user authentication state.
--   `public/`: Static assets like images and SVGs.
+```
+bloggr/
+├── public/               # Static assets (images, icons)
+├── src/
+│   ├── app/              # Next.js App Router: pages and layouts
+│   │   ├── (auth)/       # Route group for auth pages (e.g. login, signup)
+│   │   ├── dashboard/    # Protected user dashboard page
+│   │   ├── post/         # Dynamic routes for individual posts
+│   │   └── page.tsx      # Homepage (main feed)
+│   ├── components/       # Reusable React components
+│   │   ├── dashboard/    # Components for the dashboard
+│   │   ├── home/         # Components for the homepage/feed
+│   │   └── shared/       # Components used across the app (Navbar, Footer, etc.)
+│   ├── context/          # React Context providers (e.g., AuthContext)
+│   └── lib/              # Library functions, hooks, and utilities
+├── .env.local            # Local environment variables
+└── package.json
+```
 
 ## Learn More
 
-To learn more about Next.js, take a look at the following resources:
+To learn more about the technologies used in this project, check out the following resources:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+-   [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+-   [React Documentation](https://react.dev/) - learn about React.
+-   [Tailwind CSS Documentation](https://tailwindcss.com/docs) - learn how to use Tailwind CSS.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+_This README was generated with assistance from an AI pair programmer._

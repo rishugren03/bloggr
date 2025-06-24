@@ -8,15 +8,25 @@ import { PenSquare } from "lucide-react";
 
 export default function DashboardPage() {
   const router = useRouter();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, loading, user } = useAuth();
 
   useEffect(() => {
-    if (!isAuthenticated) {
+    if (!loading && !isAuthenticated) {
       router.replace("/login");
     }
-  }, [isAuthenticated, router]);
+  }, [isAuthenticated, loading, router]);
 
-  if (!isAuthenticated) return null;
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen bg-[#0f172a]">
+        <p className="text-white text-lg">Loading dashboard...</p>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return null; // or a redirect component
+  }
 
   return (
     <div className="min-h-screen bg-[#0f172a] text-white">
