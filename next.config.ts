@@ -2,12 +2,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: [
-      "images.unsplash.com", // ✅ for Unsplash
-      "media.licdn.com",
-      "www.datocms-assets.com",
-      "www.opencolleges.edu.au",
-      "www.iienstitu.com",
+    remotePatterns: [
+      { hostname: "images.unsplash.com" }, // ✅ for Unsplash
+      { hostname: "media.licdn.com" },
+      { hostname: "www.datocms-assets.com" },
+      { hostname: "www.opencolleges.edu.au" },
+      { hostname: "www.iienstitu.com" },
     ],
   },
 };
