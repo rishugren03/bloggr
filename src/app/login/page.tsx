@@ -37,8 +37,12 @@ export default function LoginPage() {
       }
       login(data.token);
       window.location.href = "/dashboard";
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError(String(err));
+      }
     } finally {
       setLoading(false);
     }
@@ -110,7 +114,7 @@ export default function LoginPage() {
 
           <div className="text-center text-sm text-white">
             <p>
-              Don't have an account?{" "}
+              Don&apos;t have an account?{" "}
               <Link
                 href="/signup"
                 className="text-blue-300 hover:text-blue-400 underline ml-1">

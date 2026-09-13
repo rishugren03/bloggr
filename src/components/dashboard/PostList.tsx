@@ -8,12 +8,13 @@ import { useSearchParams } from "next/navigation";
 function parseJwt(token: string) {
   try {
     return JSON.parse(atob(token.split(".")[1]));
-  } catch (e) {
+  } catch {
     return null;
   }
 }
 
 export default function PostList() {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [posts, setPosts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");

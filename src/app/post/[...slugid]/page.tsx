@@ -8,6 +8,7 @@ export default function PostDetailPage() {
   const slugParams = params.slugid as string[];
   const id = slugParams?.[slugParams.length - 1];
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [post, setPost] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");

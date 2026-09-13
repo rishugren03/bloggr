@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Search, ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
+import { Search, ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
 
 interface Post {
@@ -22,7 +22,7 @@ interface Author {
 export default function BloggrFeedPage({ initialPosts }: { initialPosts: Post[] }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [posts, setPosts] = useState<Post[]>(initialPosts);
+  const [posts] = useState<Post[]>(initialPosts);
   const [selectedAuthor, setSelectedAuthor] = useState<string | null>(null);
   const [authors, setAuthors] = useState<Author[]>([]);
   const [isScrolled, setIsScrolled] = useState(false);

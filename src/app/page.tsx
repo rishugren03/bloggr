@@ -1,5 +1,4 @@
 import Navbar from "@/components/shared/Navbar";
-import Footer from "@/components/shared/Footer";
 import BloggrFeedPage from "@/components/home/Feed";
 
 async function getPosts() {

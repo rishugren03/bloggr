@@ -8,7 +8,7 @@ import { PenSquare } from "lucide-react";
 
 export default function DashboardPage() {
   const router = useRouter();
-  const { isAuthenticated, loading, user } = useAuth();
+  const { isAuthenticated, loading } = useAuth();
 
   useEffect(() => {
     if (!loading && !isAuthenticated) {

@@ -18,12 +18,12 @@ export default function AboutPage() {
             Our mission is to provide a simple, beautiful, and powerful space for you to share your voice with the world.
           </p>
           <p>
-            Whether you're a seasoned author, a passionate hobbyist, or just starting out, Bloggr offers the tools you need to create compelling content. 
+            Whether you&apos;re a seasoned author, a passionate hobbyist, or just starting out, Bloggr offers the tools you need to create compelling content. 
             We believe in the power of words to connect, inspire, and drive change.
           </p>
           <h2 className="text-2xl font-bold text-white mt-8 mb-4">Our Vision</h2>
           <p>
-            We envision a world where everyone has the opportunity to share their story. We're committed to building an open, inclusive, and supportive community for creators and readers alike.
+            We envision a world where everyone has the opportunity to share their story. We&apos;re committed to building an open, inclusive, and supportive community for creators and readers alike.
           </p>
         </div>
       </div>
