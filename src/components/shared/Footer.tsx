@@ -6,20 +6,10 @@ const Footer = () => {
   
   const socialLinks = [
     {
-      name: "Twitter",
-      href: "https://x.com/i_amrishu",
-      icon: <Twitter className="w-5 h-5" />
-    },
-    {
       name: "GitHub",
-      href: "https://github.com/rishugren03/bloggr",
+      href: "https://github.com/pronnati-29/bloggr",
       icon: <Github className="w-5 h-5" />
     },
-    {
-      name: "LinkedIn",
-      href: "https://www.linkedin.com/in/rishu-kumar-68455a213/",
-      icon: <Linkedin className="w-5 h-5" />
-    }
   ];
 
   const quickLinks = [
